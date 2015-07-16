@@ -77,6 +77,7 @@ public class GetRecipes extends Activity {
                 displayRecipes(List_of_recipes, sort, Search, Search_Query);
             }
         });
+
         PreviousButton = (Button) findViewById(R.id.prev);
         NextButton = (Button) findViewById(R.id.next);
         pageIndex = 1;
@@ -168,8 +169,10 @@ public class GetRecipes extends Activity {
         }
         //set listeners for navigation buttons
         NextButton.setEnabled(true);
+        NextButton.setText(String.valueOf(pageIndex + 1) + " >");
         if (pageIndex > 1){
             PreviousButton.setEnabled(true);
+            PreviousButton.setText("< " + String.valueOf(pageIndex - 1));
         }
         else{
             PreviousButton.setEnabled(false);
@@ -181,14 +184,13 @@ public class GetRecipes extends Activity {
                 displayRecipes(--pageIndex, sort, DisplayType, TopRated);
             }
         });
-
-
         NextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 displayRecipes(++pageIndex, sort, DisplayType, TopRated);
             }
         });
+        ChangeSortTypeButton.setText("Current page: "+String.valueOf(pageIndex));
     }
 
 
@@ -293,7 +295,10 @@ public class GetRecipes extends Activity {
         llt.addView(ExternalLinkSource);
         llt.addView(ExternalLinkImage);
 
+        ChangeSortTypeButton.setText("Recipe");
         NextButton.setEnabled(false);
+        NextButton.setText(">");
+        PreviousButton.setText("<");
         PreviousButton.setEnabled(true);
         PreviousButton.setOnClickListener(new View.OnClickListener() {
             @Override
