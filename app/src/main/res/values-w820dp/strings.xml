@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="searchButtonText">search</string>
+    <string name="captionTop">sorted by Top Rated</string>
+    <string name="captionTrending">sorted by Trending</string>
+    <string name="previous"><![CDATA[<]]></string>
+    <string name="next"><![CDATA[>]]></string>
+</resources>
