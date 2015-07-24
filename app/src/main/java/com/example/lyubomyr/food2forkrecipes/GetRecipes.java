@@ -50,8 +50,6 @@ public class GetRecipes extends Activity {
     final int Top_or_Trending = 1;
     final int Search = 2;
     public int DisplayType = 1;
-    public RecipesQuery Recipes;
-    public RecipeData currentRecipe;
     protected String Search_Query;
     LinearLayout llt;
     protected int pageIndex;
@@ -66,7 +64,7 @@ public class GetRecipes extends Activity {
     String BaseURL = "http://food2fork.com/api";    //base url
     String key = "31a6f30afb8d54d0e8f54b624e200e47";//key
 
-    String tempID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,31 +72,7 @@ public class GetRecipes extends Activity {
         //params for displaying components
         setContentView(R.layout.activity_get_recipes);
         ChangeSortTypeButton = (Button) findViewById(R.id.ChangeSort);
-        ChangeSortTypeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pageIndex = 1;
-                PreviousButton.setText("<");
-                if (TopRated.contentEquals(sort)) {
-                    sort = Trending;
-                    ChangeSortTypeButton.setText("sorted by Trending");
-                    displayRecipes(pageIndex, Trending, DisplayType, Search_Query);
-                    return;
-                }
-                if (Trending.contentEquals(sort)) {
-                    sort = TopRated;
-                    ChangeSortTypeButton.setText("sorted by Top Rated");
-                    displayRecipes(pageIndex, TopRated, DisplayType, Search_Query);
-                    return;
-                }
-                else {
-                    sort = Trending;
-                    ChangeSortTypeButton.setText("sorted by Trending");
-                    displayRecipes(pageIndex, sort, DisplayType, Search_Query);
-                    return;
-                }
-            }
-        });
+
 
         SearchText = (EditText) findViewById(R.id.searchField);
         SearchButton = (Button) findViewById(R.id.SearchButton);
@@ -123,7 +97,7 @@ public class GetRecipes extends Activity {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void displayRecipes(int page, final String sortType, final int displayType, String SearchQuery){
+    public void displayRecipes(int page, final String sortType, final int displayType, final String SearchQuery){
         Toast.makeText(getApplicationContext(), "Downloading list, please wait...", Toast.LENGTH_LONG).show();
         DisplayType = displayType;
         ScrollField = (ScrollView) findViewById(R.id.scrollView);
@@ -145,8 +119,6 @@ public class GetRecipes extends Activity {
                 RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         final LinearLayout.LayoutParams lImgParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-
-
 
         //retrofit query
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(BaseURL).build();
@@ -178,7 +150,7 @@ public class GetRecipes extends Activity {
                     String imageURL = result.getRecipes().get(i).getImageUrl();
                     Picasso.with(getApplicationContext()).load(imageURL).into(ItemImage);
 
-                    tempID = result.getRecipes().get(i).getRecipeId();
+                    final String tempID = result.getRecipes().get(i).getRecipeId();
                     viewDetails.setLayoutParams(lButtonParams);//button init
                     viewDetails.setText("Details...");
                     viewDetails.setTextColor(Color.BLACK);
@@ -203,6 +175,61 @@ public class GetRecipes extends Activity {
                 RecipeShortInfo.setText("Error" + error.getMessage());
             }
         });
+            //set listeners for navigation buttons
+            NextButton.setEnabled(true);
+            NextButton.setText(String.valueOf(pageIndex + 1) + " >");
+            if (pageIndex > 1){
+                PreviousButton.setEnabled(true);
+                PreviousButton.setText("< " + String.valueOf(pageIndex - 1));
+            }
+            else{
+                PreviousButton.setEnabled(false);
+            }
+            PreviousButton = (Button) findViewById(R.id.prev);
+            PreviousButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    displayRecipes(--pageIndex, sort, DisplayType, TopRated);
+                }
+            });
+            NextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    displayRecipes(++pageIndex, sort, DisplayType, TopRated);
+                }
+            });
+            ChangeSortTypeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pageIndex = 1;
+                    PreviousButton.setText("<");
+                    if (TopRated.contentEquals(sort)) {
+                        sort = Trending;
+                        ChangeSortTypeButton.setText("sorted by Trending");
+                        displayRecipes(pageIndex, Trending, DisplayType, Search_Query);
+                        return;
+                    }
+                    if (Trending.contentEquals(sort)) {
+                        sort = TopRated;
+                        ChangeSortTypeButton.setText("sorted by Top Rated");
+                        displayRecipes(pageIndex, TopRated, DisplayType, Search_Query);
+                        return;
+                    }
+                    else {
+                        sort = Trending;
+                        ChangeSortTypeButton.setText("sorted by Trending");
+                        displayRecipes(pageIndex, sort, DisplayType, Search_Query);
+                        return;
+                    }
+                }
+            });
+            ChangeSortTypeButton.setEnabled(true);
+            if (sort.equals(TopRated)){
+                ChangeSortTypeButton.setText("sorted by Top Rated");
+            }
+            if (sort.equals(Trending)){
+                ChangeSortTypeButton.setText("sorted by Trending");
+            }
         }
         if (displayType == Search){                             //display search results
             SearchQuery Response = restAdapter.create(SearchQuery.class);
@@ -231,7 +258,7 @@ public class GetRecipes extends Activity {
                         String imageURL = result.getRecipes().get(i).getImageUrl();
                         Picasso.with(getApplicationContext()).load(imageURL).into(ItemImage);
 
-                        tempID = result.getRecipes().get(i).getRecipeId();
+                        final String tempID = result.getRecipes().get(i).getRecipeId();
                         viewDetails.setLayoutParams(lButtonParams);//button init
                         viewDetails.setText("Details...");
                         viewDetails.setTextColor(Color.BLACK);
@@ -256,37 +283,18 @@ public class GetRecipes extends Activity {
                     RecipeShortInfo.setText("Error" + error.getMessage());
                 }
             });
-        }
-        //set listeners for navigation buttons
-        NextButton.setEnabled(true);
-        NextButton.setText(String.valueOf(pageIndex + 1) + " >");
-        if (pageIndex > 1){
-            PreviousButton.setEnabled(true);
-            PreviousButton.setText("< " + String.valueOf(pageIndex - 1));
-        }
-        else{
+            NextButton.setEnabled(false);
             PreviousButton.setEnabled(false);
+            ChangeSortTypeButton.setText("view Top Rated");
+            ChangeSortTypeButton.setEnabled(true);
+            ChangeSortTypeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    displayRecipes(pageIndex,sort,Top_or_Trending,SearchQuery);
+                }
+            });
         }
-        PreviousButton = (Button) findViewById(R.id.prev);
-        PreviousButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayRecipes(--pageIndex, sort, DisplayType, TopRated);
-            }
-        });
-        NextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayRecipes(++pageIndex, sort, DisplayType, TopRated);
-            }
-        });
-        ChangeSortTypeButton.setEnabled(true);
-        if (sort.equals(TopRated)){
-            ChangeSortTypeButton.setText("sorted by Top Rated");
-        }
-        if (sort.equals(Trending)){
-            ChangeSortTypeButton.setText("sorted by Trending");
-        }
+
     }
 
 
@@ -404,56 +412,6 @@ public class GetRecipes extends Activity {
                 displayRecipes(pageIndex, sort, DisplayType, Search_Query);
             }
         });
-    }
-
-
-    protected RecipeData jsonParser(String strJson, int type){
-        JSONObject dataJsonObj;
-        RecipeData data = new RecipeData(type);
-        if (type == List_of_recipes) {
-            try {
-                dataJsonObj = new JSONObject(strJson);
-                JSONArray recipes = dataJsonObj.getJSONArray("recipes");
-
-                // get the objects from top rated
-                // publisher, url, f2f_url, title, source_url, recipe_id, image_url, social_rank, publisher_url
-                data.NumOfRecipes = recipes.length();
-                for (int i = 0; i < recipes.length(); i++) {
-                    JSONObject recipe = recipes.getJSONObject(i);
-                    data.title.add(recipe.getString("title"));
-                    data.social_rank.add(recipe.getString("social_rank"));
-                    data.publisher.add(recipe.getString("publisher"));
-                    data.publisher_url.add(recipe.getString("publisher_url"));
-                    data.source_url.add(recipe.getString("source_url"));
-                    data.image_url.add(recipe.getString("image_url"));
-                    data.recipe_id.add(recipe.getString("recipe_id"));
-                    data.f2f_url.add(recipe.getString("f2f_url"));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        if (type == Detail_of_recipe){
-            try {
-                dataJsonObj = new JSONObject(strJson);
-                JSONObject recipe = dataJsonObj.getJSONObject("recipe");
-                JSONArray ingredients = recipe.getJSONArray("ingredients");
-                for (int i = 0; i < ingredients.length(); i++){
-                    data.ingredients.add(String.valueOf(ingredients.get(i)));
-                }
-                data.Title = recipe.getString("title");
-                data.SocialRank = recipe.getString("social_rank");
-                data.Publisher = recipe.getString("publisher");
-                data.PublisherURL = recipe.getString("publisher_url");
-                data.SourceURL = recipe.getString("source_url");
-                data.ImgURL = recipe.getString("image_url");
-                data.F2FURL = recipe.getString("f2f_url");
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return data;
     }
 
     @Override
