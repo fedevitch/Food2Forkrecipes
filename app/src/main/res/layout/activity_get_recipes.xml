@@ -53,7 +53,8 @@
         android:minWidth="200dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/SearchButton" />
+        android:layout_toStartOf="@+id/SearchButton"
+        android:enabled="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -75,7 +76,7 @@
         android:enabled="true"
         android:layout_below="@+id/scrollView"
         android:layout_centerHorizontal="true"
-        android:alpha="0.5" />
+        android:alpha="1" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
