@@ -10,4 +10,5 @@
     <string name="captionTrending">sorted by Trending</string>
     <string name="previous"><![CDATA[<]]></string>
     <string name="next"><![CDATA[>]]></string>
+    <string name="WaitMsg">Getting info...</string>
 </resources>

@@ -2,6 +2,8 @@ package com.example.lyubomyr.food2forkrecipes;
 
 import android.annotation.TargetApi;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -10,16 +12,20 @@ import android.app.Activity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Space;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -44,7 +50,6 @@ import retrofit.client.Response;
 public class GetRecipes extends Activity {
 
     final int List_of_recipes = 1;
-    final int Detail_of_recipe = 2;
     final String TopRated = "r";
     final String Trending = "t";
     final int Top_or_Trending = 1;
@@ -55,8 +60,8 @@ public class GetRecipes extends Activity {
     protected int pageIndex;
     String sort;
     Button ChangeSortTypeButton;
-    Button SearchButton;
     EditText SearchText;
+    TextView DisplayRecipesCount;
     Button PreviousButton;
     Button NextButton;
     ScrollView ScrollField;
@@ -72,22 +77,26 @@ public class GetRecipes extends Activity {
         //params for displaying components
         setContentView(R.layout.activity_get_recipes);
         ChangeSortTypeButton = (Button) findViewById(R.id.ChangeSort);
-
-
+        DisplayRecipesCount = (TextView) findViewById(R.id.ResultInfo);
         SearchText = (EditText) findViewById(R.id.searchField);
-        SearchButton = (Button) findViewById(R.id.SearchButton);
-        SearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //implement search
-                pageIndex = 1;
-                DisplayType = 2;
-                NextButton.setText(String.valueOf(pageIndex+1)+">");
-                PreviousButton.setText("<");
-                Search_Query = SearchText.getText().toString();
-                displayRecipes(List_of_recipes, sort, Search, Search_Query);
-            }
-        });
+        SearchText.setOnEditorActionListener(new EditText.OnEditorActionListener()
+             {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                    if ((actionId == EditorInfo.IME_ACTION_SEARCH)||!(actionId == EditorInfo.IME_FLAG_NO_ENTER_ACTION)){
+                        //implement search
+                        pageIndex = 1;
+                        DisplayType = 2;
+                        NextButton.setText(String.valueOf(pageIndex+1)+">");
+                        PreviousButton.setText("<");
+                        Search_Query = SearchText.getText().toString();
+                        displayRecipes(List_of_recipes, sort, Search, Search_Query);
+                        return true;
+                    }
+                    return false;
+                }
+             }
+        );
 
         PreviousButton = (Button) findViewById(R.id.prev);
         NextButton = (Button) findViewById(R.id.next);
@@ -101,7 +110,7 @@ public class GetRecipes extends Activity {
         Toast.makeText(getApplicationContext(), "Downloading list, please wait...", Toast.LENGTH_LONG).show();
         DisplayType = displayType;
         ScrollField = (ScrollView) findViewById(R.id.scrollView);
-        ScrollField.scrollTo(0,0);
+        ScrollField.scrollTo(0, 0);
         llt = (LinearLayout) findViewById(R.id.container);
         PreviousButton.setEnabled(false);
         NextButton.setEnabled(false);
@@ -148,7 +157,10 @@ public class GetRecipes extends Activity {
 
                     ItemImage.setLayoutParams(lImgParams);//image init
                     String imageURL = result.getRecipes().get(i).getImageUrl();
-                    Picasso.with(getApplicationContext()).load(imageURL).into(ItemImage);
+                    Picasso.with(getApplicationContext())
+                            .load(imageURL)
+                            //.resize(llt.getWidth(), ItemImage.getHeight())
+                            .into(ItemImage);
 
                     final String tempID = result.getRecipes().get(i).getRecipeId();
                     viewDetails.setLayoutParams(lButtonParams);//button init
@@ -167,6 +179,7 @@ public class GetRecipes extends Activity {
                     llt.addView(ItemImage);
                     llt.addView(viewDetails);
                 }
+                DisplayRecipesCount.setText("Recipes founded: "+result.getCount().toString());
             }
 
             @Override
@@ -241,11 +254,14 @@ public class GetRecipes extends Activity {
                         final TextView RecipeShortInfo = new TextView(getApplicationContext());//short info
                         final ImageView ItemImage = new ImageView(getApplicationContext());//image
                         final Button viewDetails = new Button(getApplicationContext());//button for view details
-
+                        //final Space endList = new Space(getApplicationContext());//empty space after item
                         //init objects for display top recipes
+
+
                         Title.setLayoutParams(lTitleParams);        //title init
                         Title.setTextSize(20);
                         Title.setTextColor(Color.BLACK);
+
                         Title.setText(Html.fromHtml(result.getRecipes().get(i).getTitle()));
 
                         RecipeShortInfo.setLayoutParams(lTextParams);//short info init
@@ -256,7 +272,11 @@ public class GetRecipes extends Activity {
 
                         ItemImage.setLayoutParams(lImgParams);//image init
                         String imageURL = result.getRecipes().get(i).getImageUrl();
-                        Picasso.with(getApplicationContext()).load(imageURL).into(ItemImage);
+                        Picasso.with(getApplicationContext())
+                                .load(imageURL)
+                                //.resize(llt.getWidth(), ItemImage.getHeight())
+                                //.fit().centerCrop()
+                                .into(ItemImage);
 
                         final String tempID = result.getRecipes().get(i).getRecipeId();
                         viewDetails.setLayoutParams(lButtonParams);//button init
@@ -274,7 +294,10 @@ public class GetRecipes extends Activity {
                         llt.addView(RecipeShortInfo);
                         llt.addView(ItemImage);
                         llt.addView(viewDetails);
+                        //llt.addView(endList);
+
                     }
+                    DisplayRecipesCount.setText("Recipes founded: "+result.getCount().toString());
                 }
 
                 @Override
@@ -285,7 +308,7 @@ public class GetRecipes extends Activity {
             });
             NextButton.setEnabled(false);
             PreviousButton.setEnabled(false);
-            ChangeSortTypeButton.setText("view Top Rated");
+            ChangeSortTypeButton.setText("view Top/Trending");
             ChangeSortTypeButton.setEnabled(true);
             ChangeSortTypeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -400,6 +423,7 @@ public class GetRecipes extends Activity {
         llt.addView(ExternalLinkSource);
         llt.addView(ExternalLinkImage);
 
+        DisplayRecipesCount.setText("");
         ChangeSortTypeButton.setText("Recipe");
         ChangeSortTypeButton.setEnabled(false);
         NextButton.setEnabled(false);
