@@ -1,11 +1,7 @@
 package com.example.lyubomyr.food2forkrecipes;
 
 import android.annotation.TargetApi;
-import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
@@ -23,27 +19,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Space;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.concurrent.ExecutionException;
-
-import retrofit.RestAdapter;
 import ListDataInterface.ListInterface;
-import RecipeDetailsInterface.DetailsInterface;
 import ListDataContainer.RecipesList;
+
+import RecipeDetailsInterface.DetailsInterface;
 import RecipeDataContainer.RecipeDetails;
+
 import SearchInterface.SearchQuery;
 
-
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -185,7 +175,7 @@ public class GetRecipes extends Activity {
             @Override
             public void failure(RetrofitError error) {
                 final TextView RecipeShortInfo = new TextView(getApplicationContext());//short info
-                RecipeShortInfo.setText("Error" + error.getMessage());
+                RecipeShortInfo.setText("Error: " + error.getMessage());
             }
         });
             //set listeners for navigation buttons
@@ -303,7 +293,7 @@ public class GetRecipes extends Activity {
                 @Override
                 public void failure(RetrofitError error) {
                     final TextView RecipeShortInfo = new TextView(getApplicationContext());//short info
-                    RecipeShortInfo.setText("Error" + error.getMessage());
+                    RecipeShortInfo.setText("Error: " + error.getMessage());
                 }
             });
             NextButton.setEnabled(false);
@@ -410,7 +400,7 @@ public class GetRecipes extends Activity {
 
             @Override
             public void failure(RetrofitError error) {
-                RecipeShortInfo.setText("Error" + error.getMessage());
+                RecipeShortInfo.setText("Error: " + error.getMessage());
             }
         });
 
