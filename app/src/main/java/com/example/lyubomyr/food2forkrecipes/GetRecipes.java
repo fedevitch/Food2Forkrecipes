@@ -16,6 +16,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -55,7 +56,7 @@ public class GetRecipes extends Activity {
     Button PreviousButton;
     Button NextButton;
     ScrollView ScrollField;
-
+    ListView ListOfItems;
     String BaseURL = "http://food2fork.com/api";    //base url
     String key = "31a6f30afb8d54d0e8f54b624e200e47";//key
 
@@ -99,25 +100,26 @@ public class GetRecipes extends Activity {
     public void displayRecipes(int page, final String sortType, final int displayType, final String SearchQuery){
         Toast.makeText(getApplicationContext(), "Downloading list, please wait...", Toast.LENGTH_LONG).show();
         DisplayType = displayType;
-        ScrollField = (ScrollView) findViewById(R.id.scrollView);
-        ScrollField.scrollTo(0, 0);
-        llt = (LinearLayout) findViewById(R.id.container);
+//        ScrollField = (ScrollView) findViewById(R.id.scrollView);
+//        ScrollField.scrollTo(0, 0);
+//        llt = (LinearLayout) findViewById(R.id.container);
+        ListOfItems = (ListView) findViewById(R.id.listView);
         PreviousButton.setEnabled(false);
         NextButton.setEnabled(false);
         try{
-            llt.removeAllViewsInLayout();
-            llt.clearDisappearingChildren();
+//            llt.removeAllViewsInLayout();
+//            llt.clearDisappearingChildren();
         } catch(NullPointerException e){
             e.printStackTrace();
         }
-        final LinearLayout.LayoutParams lTitleParams = new LinearLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final LinearLayout.LayoutParams lTextParams = new LinearLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final LinearLayout.LayoutParams lButtonParams = new LinearLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final LinearLayout.LayoutParams lImgParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+//        final LinearLayout.LayoutParams lTitleParams = new LinearLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        final LinearLayout.LayoutParams lTextParams = new LinearLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        final LinearLayout.LayoutParams lButtonParams = new LinearLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        final LinearLayout.LayoutParams lImgParams = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
 
         //retrofit query
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(BaseURL).build();
@@ -128,46 +130,46 @@ public class GetRecipes extends Activity {
             @Override
             public void success(RecipesList result, Response response) {
                 for (int i = 0; i < result.getCount(); i++) {
-                    final TextView Title = new TextView(getApplicationContext());//title
-                    final TextView RecipeShortInfo = new TextView(getApplicationContext());//short info
-                    final ImageView ItemImage = new ImageView(getApplicationContext());//image
-                    final Button viewDetails = new Button(getApplicationContext());//button for view details
-
-                    //init objects for display top recipes
-                    Title.setLayoutParams(lTitleParams);        //title init
-                    Title.setTextSize(20);
-                    Title.setTextColor(Color.BLACK);
-                    Title.setText(Html.fromHtml(result.getRecipes().get(i).getTitle()));
-
-                    RecipeShortInfo.setLayoutParams(lTextParams);//short info init
-                    RecipeShortInfo.setTextColor(Color.BLACK);
-                    RecipeShortInfo.setText("\n Social rank: " + result.getRecipes().get(i).getSocialRank()
-                                    + "\n Publisher: " + result.getRecipes().get(i).getPublisher()
-                    );
-
-                    ItemImage.setLayoutParams(lImgParams);//image init
-                    String imageURL = result.getRecipes().get(i).getImageUrl();
-                    Picasso.with(getApplicationContext())
-                            .load(imageURL)
-                            //.resize(llt.getWidth(), ItemImage.getHeight())
-                            .into(ItemImage);
-
-                    final String tempID = result.getRecipes().get(i).getRecipeId();
-                    viewDetails.setLayoutParams(lButtonParams);//button init
-                    viewDetails.setText("Details...");
-                    viewDetails.setTextColor(Color.BLACK);
-                    viewDetails.setId(i);
-                    viewDetails.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            DisplayRecipe(tempID);
-                        }
-                    });
-
-                    llt.addView(Title);
-                    llt.addView(RecipeShortInfo);
-                    llt.addView(ItemImage);
-                    llt.addView(viewDetails);
+//                    final TextView Title = new TextView(getApplicationContext());//title
+//                    final TextView RecipeShortInfo = new TextView(getApplicationContext());//short info
+//                    final ImageView ItemImage = new ImageView(getApplicationContext());//image
+//                    final Button viewDetails = new Button(getApplicationContext());//button for view details
+//
+//                    //init objects for display top recipes
+//                    Title.setLayoutParams(lTitleParams);        //title init
+//                    Title.setTextSize(20);
+//                    Title.setTextColor(Color.BLACK);
+//                    Title.setText(Html.fromHtml(result.getRecipes().get(i).getTitle()));
+//
+//                    RecipeShortInfo.setLayoutParams(lTextParams);//short info init
+//                    RecipeShortInfo.setTextColor(Color.BLACK);
+//                    RecipeShortInfo.setText("\n Social rank: " + result.getRecipes().get(i).getSocialRank()
+//                                    + "\n Publisher: " + result.getRecipes().get(i).getPublisher()
+//                    );
+//
+//                    ItemImage.setLayoutParams(lImgParams);//image init
+//                    String imageURL = result.getRecipes().get(i).getImageUrl();
+//                    Picasso.with(getApplicationContext())
+//                            .load(imageURL)
+//                            //.resize(llt.getWidth(), ItemImage.getHeight())
+//                            .into(ItemImage);
+//
+//                    final String tempID = result.getRecipes().get(i).getRecipeId();
+//                    viewDetails.setLayoutParams(lButtonParams);//button init
+//                    viewDetails.setText("Details...");
+//                    viewDetails.setTextColor(Color.BLACK);
+//                    viewDetails.setId(i);
+//                    viewDetails.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            DisplayRecipe(tempID);
+//                        }
+//                    });
+//
+//                    llt.addView(Title);
+//                    llt.addView(RecipeShortInfo);
+//                    llt.addView(ItemImage);
+//                    llt.addView(viewDetails);
                 }
                 DisplayRecipesCount.setText("Recipes founded: "+result.getCount().toString());
             }
@@ -240,51 +242,51 @@ public class GetRecipes extends Activity {
                 @Override
                 public void success(RecipesList result, Response response) {
                     for (int i = 0; i < result.getCount(); i++) {
-                        final TextView Title = new TextView(getApplicationContext());//title
-                        final TextView RecipeShortInfo = new TextView(getApplicationContext());//short info
-                        final ImageView ItemImage = new ImageView(getApplicationContext());//image
-                        final Button viewDetails = new Button(getApplicationContext());//button for view details
-                        //final Space endList = new Space(getApplicationContext());//empty space after item
-                        //init objects for display top recipes
-
-
-                        Title.setLayoutParams(lTitleParams);        //title init
-                        Title.setTextSize(20);
-                        Title.setTextColor(Color.BLACK);
-
-                        Title.setText(Html.fromHtml(result.getRecipes().get(i).getTitle()));
-
-                        RecipeShortInfo.setLayoutParams(lTextParams);//short info init
-                        RecipeShortInfo.setTextColor(Color.BLACK);
-                        RecipeShortInfo.setText("\n Social rank: " + result.getRecipes().get(i).getSocialRank()
-                                        + "\n Publisher: " + result.getRecipes().get(i).getPublisher()
-                        );
-
-                        ItemImage.setLayoutParams(lImgParams);//image init
-                        String imageURL = result.getRecipes().get(i).getImageUrl();
-                        Picasso.with(getApplicationContext())
-                                .load(imageURL)
-                                //.resize(llt.getWidth(), ItemImage.getHeight())
-                                //.fit().centerCrop()
-                                .into(ItemImage);
-
-                        final String tempID = result.getRecipes().get(i).getRecipeId();
-                        viewDetails.setLayoutParams(lButtonParams);//button init
-                        viewDetails.setText("Details...");
-                        viewDetails.setTextColor(Color.BLACK);
-                        viewDetails.setId(i);
-                        viewDetails.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                DisplayRecipe(tempID);
-                            }
-                        });
-
-                        llt.addView(Title);
-                        llt.addView(RecipeShortInfo);
-                        llt.addView(ItemImage);
-                        llt.addView(viewDetails);
-                        //llt.addView(endList);
+//                        final TextView Title = new TextView(getApplicationContext());//title
+//                        final TextView RecipeShortInfo = new TextView(getApplicationContext());//short info
+//                        final ImageView ItemImage = new ImageView(getApplicationContext());//image
+//                        final Button viewDetails = new Button(getApplicationContext());//button for view details
+//                        //final Space endList = new Space(getApplicationContext());//empty space after item
+//                        //init objects for display top recipes
+//
+//
+//                        Title.setLayoutParams(lTitleParams);        //title init
+//                        Title.setTextSize(20);
+//                        Title.setTextColor(Color.BLACK);
+//
+//                        Title.setText(Html.fromHtml(result.getRecipes().get(i).getTitle()));
+//
+//                        RecipeShortInfo.setLayoutParams(lTextParams);//short info init
+//                        RecipeShortInfo.setTextColor(Color.BLACK);
+//                        RecipeShortInfo.setText("\n Social rank: " + result.getRecipes().get(i).getSocialRank()
+//                                        + "\n Publisher: " + result.getRecipes().get(i).getPublisher()
+//                        );
+//
+//                        ItemImage.setLayoutParams(lImgParams);//image init
+//                        String imageURL = result.getRecipes().get(i).getImageUrl();
+//                        Picasso.with(getApplicationContext())
+//                                .load(imageURL)
+//                                //.resize(llt.getWidth(), ItemImage.getHeight())
+//                                //.fit().centerCrop()
+//                                .into(ItemImage);
+//
+//                        final String tempID = result.getRecipes().get(i).getRecipeId();
+//                        viewDetails.setLayoutParams(lButtonParams);//button init
+//                        viewDetails.setText("Details...");
+//                        viewDetails.setTextColor(Color.BLACK);
+//                        viewDetails.setId(i);
+//                        viewDetails.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                DisplayRecipe(tempID);
+//                            }
+//                        });
+//
+//                        llt.addView(Title);
+//                        llt.addView(RecipeShortInfo);
+//                        llt.addView(ItemImage);
+//                        llt.addView(viewDetails);
+//                        //llt.addView(endList);
 
                     }
                     DisplayRecipesCount.setText("Recipes founded: "+result.getCount().toString());
@@ -313,35 +315,35 @@ public class GetRecipes extends Activity {
 
     public void DisplayRecipe(String id){
         Toast.makeText(getApplicationContext(), "Getting recipe...", Toast.LENGTH_LONG).show();
-        ScrollField = (ScrollView) findViewById(R.id.scrollView);
-        ScrollField.scrollTo(0,0);
-        llt = (LinearLayout) findViewById(R.id.container);
-        PreviousButton.setEnabled(false);
-        NextButton.setEnabled(false);
-        try{
-            llt.removeAllViewsInLayout();
-            llt.clearDisappearingChildren();
-        } catch(NullPointerException e){
-            e.printStackTrace();
-        }
-        llt = (LinearLayout) findViewById(R.id.container);
-        llt.removeAllViewsInLayout();
-        final LinearLayout.LayoutParams lTitleParams = new LinearLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final LinearLayout.LayoutParams lTextParams = new LinearLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final LinearLayout.LayoutParams lButtonParams = new LinearLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final LinearLayout.LayoutParams lImgParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        final ImageView ItemImage = new ImageView(this);                                    //image
-        final TextView ExternalLinkImage = new TextView(this);                          //Image link
-        final TextView Title = new TextView(this);                                          //title
-        final TextView RecipeShortInfo = new TextView(this);                            //short info
-        final TextView IngredientsList = new TextView(this);                   //display ingredients
-        final TextView ExternalLinkF2F = new TextView(this);                              //F2F link
-        final TextView ExternalLinkSource = new TextView(this);                        //Source link
+//        ScrollField = (ScrollView) findViewById(R.id.scrollView);
+//        ScrollField.scrollTo(0,0);
+//        llt = (LinearLayout) findViewById(R.id.container);
+//        PreviousButton.setEnabled(false);
+//        NextButton.setEnabled(false);
+//        try{
+//            llt.removeAllViewsInLayout();
+//            llt.clearDisappearingChildren();
+//        } catch(NullPointerException e){
+//            e.printStackTrace();
+//        }
+//        llt = (LinearLayout) findViewById(R.id.container);
+//        llt.removeAllViewsInLayout();
+//        final LinearLayout.LayoutParams lTitleParams = new LinearLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        final LinearLayout.LayoutParams lTextParams = new LinearLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        final LinearLayout.LayoutParams lButtonParams = new LinearLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        final LinearLayout.LayoutParams lImgParams = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+//
+//        final ImageView ItemImage = new ImageView(this);                                    //image
+//        final TextView ExternalLinkImage = new TextView(this);                          //Image link
+//        final TextView Title = new TextView(this);                                          //title
+//        final TextView RecipeShortInfo = new TextView(this);                            //short info
+//        final TextView IngredientsList = new TextView(this);                   //display ingredients
+//        final TextView ExternalLinkF2F = new TextView(this);                              //F2F link
+//        final TextView ExternalLinkSource = new TextView(this);                        //Source link
 
         //retrofit query
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(BaseURL).build();
@@ -349,69 +351,69 @@ public class GetRecipes extends Activity {
         Response.getList(key, id, new retrofit.Callback<RecipeDataContainer.RecipeDetails>() {
             @Override
             public void success(RecipeDetails result, Response response) {
-                Title.setLayoutParams(lTitleParams);                                //title init
-                Title.setTextSize(20);
-                Title.setText(Html.fromHtml(result.getRecipe().getTitle()));
-
-
-                RecipeShortInfo.setLayoutParams(lTextParams);                       //shortinfo init
-                RecipeShortInfo.setText("\n Social rank: " + result.getRecipe().getSocialRank()
-                                + "\n Publisher: " + result.getRecipe().getPublisher()
-                );
-
-
-                IngredientsList.setLayoutParams(lTextParams);    //display ingredients init
-                IngredientsList.setTextSize(18);
-                String ingredients = "";
-                for(int i = 0; i < result.getRecipe().getIngredients().size(); i++){
-                    ingredients += "\n"+Html.fromHtml(result.getRecipe().getIngredients().get(i));
-                }
-                IngredientsList.setText(ingredients);
-
-                ExternalLinkF2F.setLayoutParams(lTextParams);                 //f2flink init
-                ExternalLinkF2F.setTextSize(16);
-                ExternalLinkF2F.setClickable(true);
-                String F2Flink = "<a href=\""+result.getRecipe().getF2fUrl() +"\">View on Food2Fork</a>";
-                ExternalLinkF2F.setText(Html.fromHtml(F2Flink));
-                ExternalLinkF2F.setMovementMethod(LinkMovementMethod.getInstance());
-                ExternalLinkF2F.setAutoLinkMask(Linkify.WEB_URLS);
-
-                ExternalLinkSource.setLayoutParams(lTextParams);          //source link init
-                ExternalLinkSource.setClickable(true);
-                String Source = "<a href=\""+result.getRecipe().getSourceUrl()+"\">Source</a>";
-                ExternalLinkSource.setText(Html.fromHtml(Source));
-                ExternalLinkSource.setMovementMethod(LinkMovementMethod.getInstance());
-                ExternalLinkSource.setAutoLinkMask(Linkify.WEB_URLS);
-                ExternalLinkSource.setTextSize(16);
-
-                ExternalLinkImage.setLayoutParams(lTextParams);              // imglink init
-                ExternalLinkImage.setClickable(true);
-                String Image = "<a href=\""+result.getRecipe().getImageUrl()+"\">Image</a>";
-                ExternalLinkImage.setText(Html.fromHtml(Image));
-                ExternalLinkImage.setMovementMethod(LinkMovementMethod.getInstance());
-                ExternalLinkImage.setAutoLinkMask(Linkify.WEB_URLS);
-                ExternalLinkImage.setTextSize(16);
-
-                ItemImage.setLayoutParams(lImgParams);                          //image init
-                String imageURL = result.getRecipe().getImageUrl();
-                Picasso.with(getApplicationContext()).load(imageURL).into(ItemImage);
+//                Title.setLayoutParams(lTitleParams);                                //title init
+//                Title.setTextSize(20);
+//                Title.setText(Html.fromHtml(result.getRecipe().getTitle()));
+//
+//
+//                RecipeShortInfo.setLayoutParams(lTextParams);                       //shortinfo init
+//                RecipeShortInfo.setText("\n Social rank: " + result.getRecipe().getSocialRank()
+//                                + "\n Publisher: " + result.getRecipe().getPublisher()
+//                );
+//
+//
+//                IngredientsList.setLayoutParams(lTextParams);    //display ingredients init
+//                IngredientsList.setTextSize(18);
+//                String ingredients = "";
+//                for(int i = 0; i < result.getRecipe().getIngredients().size(); i++){
+//                    ingredients += "\n"+Html.fromHtml(result.getRecipe().getIngredients().get(i));
+//                }
+//                IngredientsList.setText(ingredients);
+//
+//                ExternalLinkF2F.setLayoutParams(lTextParams);                 //f2flink init
+//                ExternalLinkF2F.setTextSize(16);
+//                ExternalLinkF2F.setClickable(true);
+//                String F2Flink = "<a href=\""+result.getRecipe().getF2fUrl() +"\">View on Food2Fork</a>";
+//                ExternalLinkF2F.setText(Html.fromHtml(F2Flink));
+//                ExternalLinkF2F.setMovementMethod(LinkMovementMethod.getInstance());
+//                ExternalLinkF2F.setAutoLinkMask(Linkify.WEB_URLS);
+//
+//                ExternalLinkSource.setLayoutParams(lTextParams);          //source link init
+//                ExternalLinkSource.setClickable(true);
+//                String Source = "<a href=\""+result.getRecipe().getSourceUrl()+"\">Source</a>";
+//                ExternalLinkSource.setText(Html.fromHtml(Source));
+//                ExternalLinkSource.setMovementMethod(LinkMovementMethod.getInstance());
+//                ExternalLinkSource.setAutoLinkMask(Linkify.WEB_URLS);
+//                ExternalLinkSource.setTextSize(16);
+//
+//                ExternalLinkImage.setLayoutParams(lTextParams);              // imglink init
+//                ExternalLinkImage.setClickable(true);
+//                String Image = "<a href=\""+result.getRecipe().getImageUrl()+"\">Image</a>";
+//                ExternalLinkImage.setText(Html.fromHtml(Image));
+//                ExternalLinkImage.setMovementMethod(LinkMovementMethod.getInstance());
+//                ExternalLinkImage.setAutoLinkMask(Linkify.WEB_URLS);
+//                ExternalLinkImage.setTextSize(16);
+//
+//                ItemImage.setLayoutParams(lImgParams);                          //image init
+//                String imageURL = result.getRecipe().getImageUrl();
+//                Picasso.with(getApplicationContext()).load(imageURL).into(ItemImage);
             }
 
 
             @Override
             public void failure(RetrofitError error) {
-                RecipeShortInfo.setText("Error: " + error.getMessage());
+                //RecipeShortInfo.setText("Error: " + error.getMessage());
             }
         });
 
         //add elements and display info on view
-        llt.addView(Title);
-        llt.addView(ItemImage);
-        llt.addView(RecipeShortInfo);
-        llt.addView(IngredientsList);
-        llt.addView(ExternalLinkF2F);
-        llt.addView(ExternalLinkSource);
-        llt.addView(ExternalLinkImage);
+//        llt.addView(Title);
+//        llt.addView(ItemImage);
+//        llt.addView(RecipeShortInfo);
+//        llt.addView(IngredientsList);
+//        llt.addView(ExternalLinkF2F);
+//        llt.addView(ExternalLinkSource);
+//        llt.addView(ExternalLinkImage);
 
         DisplayRecipesCount.setText("");
         ChangeSortTypeButton.setText("Recipe");
