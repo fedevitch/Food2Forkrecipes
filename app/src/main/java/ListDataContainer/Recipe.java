@@ -6,7 +6,7 @@ package ListDataContainer;
 //import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+import android.text.Html;
 //@Generated("org.jsonschema2pojo")
 public class Recipe {
 
@@ -75,7 +75,7 @@ public class Recipe {
      * The title
      */
     public String getTitle() {
-        return title;
+        return String.valueOf(Html.fromHtml(title));
     }
 
     /**
@@ -176,6 +176,5 @@ public class Recipe {
     public void setPublisherUrl(String publisherUrl) {
         this.publisherUrl = publisherUrl;
     }
-
 }
 

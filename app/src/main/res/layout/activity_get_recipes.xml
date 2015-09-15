@@ -87,6 +87,7 @@
         android:layout_below="@+id/searchField"
         android:layout_toEndOf="@+id/ChangeSort"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/prev" />
+        android:layout_above="@+id/prev"
+        tools:listitem="@android:layout/simple_list_item_2" />
 
 </RelativeLayout>

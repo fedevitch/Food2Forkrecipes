@@ -1,4 +1,4 @@
-package com.example.lyubomyr.food2forkrecipes;
+package food2forkrecipes.food2forkrecipes;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

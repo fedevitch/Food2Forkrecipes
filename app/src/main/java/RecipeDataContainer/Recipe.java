@@ -5,6 +5,8 @@ package RecipeDataContainer;
  */
 
 
+import android.text.Html;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -81,6 +83,9 @@ public class Recipe {
      * The ingredients
      */
     public List<String> getIngredients() {
+        for(int i = 0; i < ingredients.size(); i++){
+            ingredients.set(i, String.valueOf(Html.fromHtml(ingredients.get(i) + "\n")));
+        }
         return ingredients;
     }
 
@@ -189,7 +194,7 @@ public class Recipe {
      * The title
      */
     public String getTitle() {
-        return title;
+        return String.valueOf(Html.fromHtml(title));
     }
 
     /**

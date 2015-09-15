@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageItem"
+        android:minHeight="60dp"
+        android:maxHeight="80dp"
+        android:minWidth="60dp"
+        android:maxWidth="80dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Title"
+        android:singleLine="true"
+        android:id="@+id/titleItem"
+        android:textSize="18dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/imageItem" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Subtitle"
+        android:textSize="12dp"
+        android:id="@+id/subtitleItem"
+        android:layout_below="@+id/ratingBarDetailed"
+        android:layout_toEndOf="@+id/imageItem" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratingBarDetailed"
+        android:numStars="10"
+        android:stepSize="1.0"
+        android:rating="10"
+        style="@android:style/Widget.DeviceDefault.RatingBar.Small"
+        android:layout_below="@+id/titleItem"
+        android:layout_toEndOf="@+id/imageItem" />
+</RelativeLayout>
